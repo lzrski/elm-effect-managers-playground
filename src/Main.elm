@@ -2,6 +2,8 @@ module Main exposing (main)
 
 import Html exposing (..)
 import Html.Events exposing (..)
+import Model exposing (Model)
+import Msg exposing (..)
 import UID
 
 
@@ -13,15 +15,6 @@ main =
         , update = update
         , view = view
         }
-
-
-type alias Model =
-    { value : Maybe Int }
-
-
-type Msg
-    = UIDRequest
-    | UIDGenerated Int
 
 
 init : ( Model, Cmd Msg )
