@@ -19,28 +19,32 @@ cmdMap f (GenerateUID constructor) =
 
 
 type alias State =
-    Int
+    { next : Int
+    , multiplier : Int
+    }
 
 
 init : Task Never State
 init =
-    Task.succeed 0
+    State 0 2 |> Task.succeed
 
 
 onEffects :
     Router msg Never
     -> List (MyCmd msg)
     -> State
-    -> Task Never Int
+    -> Task Never State
 onEffects router cmds state =
     case cmds of
         [] ->
             Task.succeed state
 
         (GenerateUID constructor) :: rest ->
-            constructor state
+            (state.next * state.multiplier)
+                |> constructor
                 |> Platform.sendToApp router
-                |> Task.andThen (\_ -> onEffects router rest (state + 1))
+                |> Task.map (always { state | next = state.next + 1 })
+                |> Task.andThen (onEffects router rest)
 
 
 onSelfMsg :
