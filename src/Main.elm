@@ -2,6 +2,7 @@ module Main exposing (main)
 
 import Html exposing (..)
 import Html.Events exposing (..)
+import Json.Encode as Encode
 import Model exposing (Model)
 import Msg exposing (..)
 import Ports
@@ -35,7 +36,12 @@ update msg model =
             model ! [ UID.generate UIDGenerated ]
 
         UIDGenerated value ->
-            { model | value = Just value } ! [ Ports.send value ]
+            { model
+                | value = Just value
+            }
+                ! [ Encode.int value
+                        |> Ports.send "New UID"
+                  ]
 
 
 view : Model -> Html.Html Msg

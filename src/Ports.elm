@@ -1,9 +1,17 @@
 port module Ports exposing (send)
 
+import Json.Decode as Decode
 
-port states : Int -> Cmd msg
+
+port states : UIState -> Cmd msg
 
 
-send : Int -> Cmd msg
-send value =
-    value |> states
+type alias UIState =
+    { kind : String
+    , data : Decode.Value
+    }
+
+
+send : String -> Decode.Value -> Cmd msg
+send kind data =
+    UIState kind data |> states
