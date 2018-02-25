@@ -26,7 +26,14 @@ init =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    let
+        decoder : Ports.UIEvent -> Msg
+        decoder event =
+            event
+                |> Debug.log "Received"
+                |> always NoOp
+    in
+        Ports.subscribe decoder
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -42,6 +49,9 @@ update msg model =
                 ! [ Encode.int value
                         |> Ports.send "New UID"
                   ]
+
+        Msg.NoOp ->
+            model ! []
 
 
 view : Model -> Html.Html Msg
