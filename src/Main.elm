@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Events exposing (..)
 import Model exposing (Model)
 import Msg exposing (..)
+import Ports
 import UID
 
 
@@ -34,7 +35,7 @@ update msg model =
             model ! [ UID.generate UIDGenerated ]
 
         UIDGenerated value ->
-            { model | value = Just value } ! []
+            { model | value = Just value } ! [ Ports.send value ]
 
 
 view : Model -> Html.Html Msg

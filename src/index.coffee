@@ -1,3 +1,5 @@
 import Elm from "./Main.elm"
 
-Elm.Main.fullscreen()
+program = Elm.Main.fullscreen()
+
+program.ports.states.subscribe console.log
