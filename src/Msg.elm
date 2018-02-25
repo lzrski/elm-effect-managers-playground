@@ -1,7 +1,9 @@
 module Msg exposing (Msg(..))
 
+import Json.Decode as Decode
+
 
 type Msg
     = UIDRequest
-    | UIDGenerated Int
+    | Send String Decode.Value
     | NoOp

@@ -39,19 +39,14 @@ subscriptions model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UIDRequest ->
-            model ! [ UID.generate UIDGenerated ]
-
-        UIDGenerated value ->
-            { model
-                | value = Just value
-            }
-                ! [ Encode.int value
-                        |> Ports.send "New UID"
-                  ]
-
         Msg.NoOp ->
             model ! []
+
+        UIDRequest ->
+            model ! [ UID.generate (Encode.int >> Send "New UID") ]
+
+        Send kind data ->
+            model ! [ Ports.send kind data ]
 
 
 view : Model -> Html.Html Msg
