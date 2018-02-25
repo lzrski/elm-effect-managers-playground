@@ -9,7 +9,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "babel-runtime": "^6.26.0",
+    "coffeescript": "^2.2.2",
     "elm": "^0.18.0",
-    "elm-live": "^2.7.5"
+    "elm-live": "^2.7.5",
+    "rollup": "^0.56.3",
+    "rollup-plugin-coffee-script": "^2.0.0",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-elm": "^1.0.3",
+    "rollup-plugin-html-entry": "^0.2.0",
+    "rollup-plugin-serve": "^0.4.2"
   }
 }
