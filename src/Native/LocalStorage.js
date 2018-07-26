@@ -13,18 +13,22 @@ var _user$project$Native_LocalStorage = (function () {
       return scheduler.nativeBinding(function(callback) {
         Promise
           .resolve(value)
+          .then(function(value) {
+            localStorage.setItem("value", value)
+            return value
+          })
           .then(scheduler.succeed)
-          .then(callback)
           .catch(handleError)
+          .then(callback)
       })
     },
 
     retrive: scheduler.nativeBinding(function(callback) {
       Promise
-        .resolve(42)
+        .resolve(localStorage.getItem("value"))
         .then(scheduler.succeed)
-        .then(callback)
         .catch(handleError)
+        .then(callback)
     })
   }
 })()
