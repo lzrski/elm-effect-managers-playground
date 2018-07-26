@@ -3,6 +3,7 @@ module Main exposing (main)
 import Html exposing (..)
 import Html.Events exposing (..)
 import Json.Encode as Encode
+import LocalStorage
 import Model exposing (Model)
 import Msg exposing (..)
 import Ports
@@ -21,7 +22,7 @@ main =
 
 init : ( Model, Cmd Msg )
 init =
-    Model Nothing ! []
+    Model Nothing ! [ LocalStorage.store 10 Stored ]
 
 
 subscriptions : Model -> Sub Msg
@@ -39,7 +40,7 @@ subscriptions model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Msg.NoOp ->
+        NoOp ->
             model ! []
 
         UIDRequest ->
@@ -47,6 +48,15 @@ update msg model =
 
         Send kind data ->
             model ! [ Ports.send kind data ]
+
+        Store value ->
+            model ! []
+
+        Stored (Ok value) ->
+            { model | value = Just value } ! []
+
+        Stored (Err message) ->
+            { model | value = Nothing } ! []
 
 
 view : Model -> Html.Html Msg
