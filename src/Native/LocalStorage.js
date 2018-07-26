@@ -9,26 +9,28 @@ var _user$project$Native_LocalStorage = (function () {
     return scheduler.fail(error.name + ": " + error.message)
   }
   return {
-    store: function (value) {
+    store: F2(function (key, value) {
       return scheduler.nativeBinding(function(callback) {
         Promise
           .resolve(value)
           .then(function(value) {
-            localStorage.setItem("value", value)
+            localStorage.setItem(key, value)
             return value
           })
           .then(scheduler.succeed)
           .catch(handleError)
           .then(callback)
       })
-    },
+    }),
 
-    retrive: scheduler.nativeBinding(function(callback) {
-      Promise
-        .resolve(localStorage.getItem("value"))
-        .then(scheduler.succeed)
-        .catch(handleError)
-        .then(callback)
-    })
+    retrive: function (key) {
+      return scheduler.nativeBinding(function(callback) {
+        Promise
+          .resolve(localStorage.getItem(key))
+          .then(scheduler.succeed)
+          .catch(handleError)
+          .then(callback)
+      })
+    }
   }
 })()

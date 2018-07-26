@@ -31,7 +31,7 @@ type Msg
 
 init : ( Model, Cmd Msg )
 init =
-    Model "" ! [ LocalStorage.retrive Retrived ]
+    Model "" ! [ LocalStorage.retrive "foo" Retrived ]
 
 
 subscriptions : Model -> Sub Msg
@@ -49,7 +49,7 @@ update msg model =
             { model | value = value } ! []
 
         Store ->
-            model ! [ LocalStorage.store model.value Stored ]
+            model ! [ LocalStorage.store "foo" model.value Stored ]
 
         Stored (Ok value) ->
             { model | value = value } ! []
