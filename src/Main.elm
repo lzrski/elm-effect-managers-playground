@@ -2,10 +2,9 @@ module Main exposing (main)
 
 import Html exposing (..)
 import Html.Events exposing (..)
+import Json.Decode as Decode
 import Json.Encode as Encode
 import LocalStorage
-import Model exposing (Model)
-import Msg exposing (..)
 import Ports
 import UID
 
@@ -18,6 +17,18 @@ main =
         , update = update
         , view = view
         }
+
+
+type alias Model =
+    { value : Maybe Int }
+
+
+type Msg
+    = UIDRequest
+    | Send String Decode.Value
+    | Store Int
+    | Stored (Result String Int)
+    | NoOp
 
 
 init : ( Model, Cmd Msg )
