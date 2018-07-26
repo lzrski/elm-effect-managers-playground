@@ -1,15 +1,21 @@
 module LocalStorage
     exposing
         ( store
+        , retrive
         )
 
-import Json.Decode as Decode
 import Native.LocalStorage
 import Task exposing (Task)
 
 
-store : Int -> (Result String Int -> msg) -> Cmd msg
+store : String -> (Result String String -> msg) -> Cmd msg
 store value constructor =
     value
         |> Native.LocalStorage.store
+        |> Task.attempt constructor
+
+
+retrive : (Result String String -> msg) -> Cmd msg
+retrive constructor =
+    Native.LocalStorage.retrive
         |> Task.attempt constructor

@@ -1,12 +1,9 @@
 module Main exposing (main)
 
 import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Json.Decode as Decode
-import Json.Encode as Encode
 import LocalStorage
-import Ports
-import UID
 
 
 main : Program Never Model Msg
@@ -20,32 +17,26 @@ main =
 
 
 type alias Model =
-    { value : Maybe Int }
+    { value : String }
 
 
 type Msg
-    = UIDRequest
-    | Send String Decode.Value
-    | Store Int
-    | Stored (Result String Int)
-    | NoOp
+    = NoOp
+    | Update String
+    | Store
+    | Stored (Result String String)
+    | Retrive
+    | Retrived (Result String String)
 
 
 init : ( Model, Cmd Msg )
 init =
-    Model Nothing ! [ LocalStorage.store 10 Stored ]
+    Model "" ! [ LocalStorage.retrive Retrived ]
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    let
-        decoder : Ports.UIEvent -> Msg
-        decoder event =
-            event
-                |> Debug.log "Received"
-                |> always NoOp
-    in
-        Ports.subscribe decoder
+    Sub.none
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -54,20 +45,26 @@ update msg model =
         NoOp ->
             model ! []
 
-        UIDRequest ->
-            model ! [ UID.generate (Encode.int >> Send "New UID") ]
+        Update value ->
+            { model | value = value } ! []
 
-        Send kind data ->
-            model ! [ Ports.send kind data ]
-
-        Store value ->
-            model ! []
+        Store ->
+            model ! [ LocalStorage.store model.value Stored ]
 
         Stored (Ok value) ->
-            { model | value = Just value } ! []
+            { model | value = value } ! []
 
         Stored (Err message) ->
-            { model | value = Nothing } ! []
+            { model | value = "" } ! []
+
+        Retrive ->
+            model ! []
+
+        Retrived (Ok value) ->
+            { model | value = value } ! []
+
+        Retrived (Err message) ->
+            { model | value = "" } ! []
 
 
 view : Model -> Html.Html Msg
@@ -78,11 +75,19 @@ view model =
             []
             [ pre
                 []
-                [ text "UID: "
-                , text <| toString model.value
+                [ text "Model: "
+                , model |> toString |> text
                 ]
             ]
+        , div
+            []
+            [ input
+                [ onInput Update
+                , value model.value
+                ]
+                []
+            ]
         , button
-            [ onClick UIDRequest ]
-            [ text "Request UID" ]
+            [ onClick Store ]
+            [ text "Store" ]
         ]
