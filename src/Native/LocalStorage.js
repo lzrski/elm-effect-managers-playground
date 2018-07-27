@@ -46,6 +46,20 @@ var _user$project$Native_LocalStorage = (function () {
           .catch(handleError)
           .then(callback)
       })
+    },
+
+    remove: function (key) {
+      return scheduler.nativeBinding(function(callback) {
+        Promise
+          .resolve(key)
+          .then(function (key) {
+            localStorage.removeItem(key)
+            return null
+          })
+          .then(scheduler.succeed)
+          .catch(handleError)
+          .then(callback)
+      })
     }
   }
 })()

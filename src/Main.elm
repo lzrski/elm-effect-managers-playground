@@ -28,6 +28,8 @@ type Msg
     | Stored (Result String String)
     | Retrive
     | Retrived (Result String (Maybe String))
+    | Remove
+    | Removed (Result String ())
 
 
 init : ( Model, Cmd Msg )
@@ -74,6 +76,18 @@ update msg model =
         Retrived (Err message) ->
             { model | value = "" } ! []
 
+        Remove ->
+            model
+                ! [ LocalStorage.remove "foo" Removed ]
+
+        Removed (Ok ()) ->
+            model
+                ! [ LocalStorage.retrive "foo" Decode.string Retrived ]
+
+        Removed (Err message) ->
+            model
+                ! []
+
 
 view : Model -> Html.Html Msg
 view model =
@@ -98,4 +112,7 @@ view model =
         , button
             [ onClick Store ]
             [ text "Store" ]
+        , button
+            [ onClick Remove ]
+            [ text "Remove" ]
         ]

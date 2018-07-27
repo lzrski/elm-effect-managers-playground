@@ -2,6 +2,7 @@ module LocalStorage
     exposing
         ( store
         , retrive
+        , remove
         )
 
 import Native.LocalStorage
@@ -50,3 +51,13 @@ retrive key decoder constructor =
             |> Native.LocalStorage.retrive
             |> Task.map (Maybe.map (Decode.decodeValue decoder))
             |> Task.attempt (unpack >> constructor)
+
+
+remove :
+    String
+    -> (Result String () -> msg)
+    -> Cmd msg
+remove key constructor =
+    key
+        |> Native.LocalStorage.remove
+        |> Task.attempt constructor
