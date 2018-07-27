@@ -3,6 +3,7 @@ module Main exposing (main)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Json.Decode as Decode
 import LocalStorage
 
 
@@ -26,12 +27,16 @@ type Msg
     | Store
     | Stored (Result String String)
     | Retrive
-    | Retrived (Result String String)
+    | Retrived (Result String (Maybe String))
 
 
 init : ( Model, Cmd Msg )
 init =
-    Model "" ! [ LocalStorage.retrive "foo" Retrived ]
+    let
+        decoder =
+            Decode.string
+    in
+        Model "" ! [ LocalStorage.retrive "foo" decoder Retrived ]
 
 
 subscriptions : Model -> Sub Msg
@@ -60,8 +65,11 @@ update msg model =
         Retrive ->
             model ! []
 
-        Retrived (Ok value) ->
+        Retrived (Ok (Just value)) ->
             { model | value = value } ! []
+
+        Retrived (Ok Nothing) ->
+            { model | value = "Nothing here" } ! []
 
         Retrived (Err message) ->
             { model | value = "" } ! []

@@ -1,7 +1,5 @@
 /* eslint-disable */
 
-console.log("Initializing native LocalStorage module");
-
 var _user$project$Native_LocalStorage = (function () {
   var scheduler = _elm_lang$core$Native_Scheduler
 
@@ -13,8 +11,9 @@ var _user$project$Native_LocalStorage = (function () {
       return scheduler.nativeBinding(function(callback) {
         Promise
           .resolve(value)
-          .then(function(value) {
-            localStorage.setItem(key, value)
+          .then(JSON.stringify)
+          .then(function(json) {
+            localStorage.setItem(key, json)
             return value
           })
           .then(scheduler.succeed)
@@ -27,6 +26,22 @@ var _user$project$Native_LocalStorage = (function () {
       return scheduler.nativeBinding(function(callback) {
         Promise
           .resolve(localStorage.getItem(key))
+          .then(function (value) {
+            switch (value) {
+              case null:
+                return {
+                  ctor: "Nothing"
+                }
+                break;
+              default:
+                return {
+                  ctor: "Just",
+                  _0: JSON.parse (value)
+                }
+
+            }
+
+          })
           .then(scheduler.succeed)
           .catch(handleError)
           .then(callback)

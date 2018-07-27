@@ -6,6 +6,7 @@ module LocalStorage
 
 import Native.LocalStorage
 import Task exposing (Task)
+import Json.Decode as Decode
 
 
 store :
@@ -21,9 +22,31 @@ store key value constructor =
 
 retrive :
     String
-    -> (Result String String -> msg)
+    -> Decode.Decoder a
+    -> (Result String (Maybe a) -> msg)
     -> Cmd msg
-retrive key constructor =
-    key
-        |> Native.LocalStorage.retrive
-        |> Task.attempt constructor
+retrive key decoder constructor =
+    let
+        unpack : Result x (Maybe (Result x a)) -> Result x (Maybe a)
+        unpack result =
+            case result of
+                -- Task failed
+                Err error ->
+                    Err error
+
+                -- Task succeeded but decoder failed
+                Ok (Just (Err error)) ->
+                    Err error
+
+                -- Everything went fine and the key we set
+                Ok (Just (Ok value)) ->
+                    Ok (Just value)
+
+                -- Everything went fine but the key was not set
+                Ok Nothing ->
+                    Ok Nothing
+    in
+        key
+            |> Native.LocalStorage.retrive
+            |> Task.map (Maybe.map (Decode.decodeValue decoder))
+            |> Task.attempt (unpack >> constructor)
