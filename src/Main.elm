@@ -48,7 +48,7 @@ subscriptions model =
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
+    case Debug.log "Msg" msg of
         NoOp ->
             model ! []
 
