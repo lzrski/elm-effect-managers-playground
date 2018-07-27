@@ -15,7 +15,7 @@
     "rollup": "^0.63.4",
     "rollup-plugin-coffee-script": "^2.0.0",
     "rollup-plugin-commonjs": "^8.3.0",
-    "rollup-plugin-elm": "^1.0.4",
+    "rollup-plugin-elm": "^1.0.6",
     "rollup-plugin-html-entry": "^0.2.0",
     "rollup-plugin-serve": "^0.4.2"
   }
