@@ -50,43 +50,64 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case Debug.log "Msg" msg of
         NoOp ->
-            model ! []
+            ( model
+            , Cmd.none
+            )
 
         Update value ->
-            { model | value = value } ! []
+            ( { model | value = value }
+            , Cmd.none
+            )
 
         Store ->
-            model ! [ LocalStorage.store "foo" model.value Stored ]
+            ( model
+            , LocalStorage.store "foo" model.value Stored
+            )
 
-            { model | value = value } ! []
         Stored (Ok ()) ->
+            ( model
+            , Cmd.none
+            )
 
         Stored (Err message) ->
-            { model | value = "" } ! []
+            ( { model | value = "" }
+            , Cmd.none
+            )
 
         Retrive ->
-            model ! []
+            ( model
+            , Cmd.none
+            )
 
         Retrived (Ok (Just value)) ->
-            { model | value = value } ! []
+            ( { model | value = value }
+            , Cmd.none
+            )
 
         Retrived (Ok Nothing) ->
-            { model | value = "Nothing here" } ! []
+            ( { model | value = "Nothing here" }
+            , Cmd.none
+            )
 
         Retrived (Err message) ->
-            { model | value = "" } ! []
+            ( { model | value = "" }
+            , Cmd.none
+            )
 
         Remove ->
-            model
-                ! [ LocalStorage.remove "foo" Removed ]
+            ( model
+            , LocalStorage.remove "foo" Removed
+            )
 
         Removed (Ok ()) ->
-            model
-                ! [ LocalStorage.retrive "foo" Decode.string Retrived ]
+            ( model
+            , LocalStorage.retrive "foo" Decode.string Retrived
+            )
 
         Removed (Err message) ->
-            model
-                ! []
+            ( model
+            , Cmd.none
+            )
 
 
 view : Model -> Html.Html Msg
