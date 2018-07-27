@@ -25,8 +25,9 @@ var _user$project$Native_LocalStorage = (function () {
     retrive: function (key) {
       return scheduler.nativeBinding(function(callback) {
         Promise
-          .resolve(localStorage.getItem(key))
-          .then(function (value) {
+          .resolve(key)
+          .then(function (key) {
+            var value = localStorage.getItem(key)
             switch (value) {
               case null:
                 return {
