@@ -25,7 +25,7 @@ type Msg
     = NoOp
     | Update String
     | Store
-    | Stored (Result String String)
+    | Stored (Result String ())
     | Retrive
     | Retrived (Result String (Maybe String))
     | Remove
@@ -58,8 +58,8 @@ update msg model =
         Store ->
             model ! [ LocalStorage.store "foo" model.value Stored ]
 
-        Stored (Ok value) ->
             { model | value = value } ! []
+        Stored (Ok ()) ->
 
         Stored (Err message) ->
             { model | value = "" } ! []

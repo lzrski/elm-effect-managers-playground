@@ -14,7 +14,7 @@ var _user$project$Native_LocalStorage = (function () {
           .then(JSON.stringify)
           .then(function(json) {
             localStorage.setItem(key, json)
-            return value
+            return null
           })
           .then(scheduler.succeed)
           .catch(handleError)

@@ -13,11 +13,12 @@ import Json.Decode as Decode
 store :
     String
     -> String
-    -> (Result String String -> msg)
+    -> (Result String () -> msg)
     -> Cmd msg
 store key value constructor =
     value
         |> Native.LocalStorage.store key
+        |> Task.map (always ())
         |> Task.attempt constructor
 
 
