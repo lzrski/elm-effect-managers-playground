@@ -22,7 +22,7 @@ export default {
     }),
     commonjs({
       // add .elm extension
-      extensions: ['.js', '.elm']
+      extensions: ['.js', '.elm', '.coffee' ]
     })
   ],
   watch: {
